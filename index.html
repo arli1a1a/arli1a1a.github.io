@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日期变化动画</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 800px;
+            width: 100%;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        
+        .date-display {
+            font-size: 4rem;
+            font-weight: 300;
+            color: #1d1d1f;
+            margin: 40px 0;
+            letter-spacing: -1px;
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            margin: 30px 0;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #007AFF, #5856D6);
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.1s linear;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 10px;
+            background-color: #007AFF;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+        
+        button:hover {
+            background-color: #0056CC;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        button:disabled {
+            background-color: #C7C7CC;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .info {
+            margin-top: 25px;
+            color: #8E8E93;
+            font-size: 14px;
+        }
+        
+        .time-display {
+            font-size: 1.2rem;
+            color: #1d1d1f;
+            margin-top: 15px;
+        }
+        
+        @media (max-width: 600px) {
+            .date-display {
+                font-size: 2.5rem;
+                min-height: 90px;
+            }
+            
+            button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>日期变化动画</h1>
+        <div class="date-display" id="dateDisplay">2023年9月20日</div>
+        <div class="time-display" id="timeDisplay">00:00 / 02:57</div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+        <div class="controls">
+            <button id="playBtn">开始</button>
+            <button id="pauseBtn" disabled>暂停</button>
+            <button id="resetBtn">重置</button>
+        </div>
+        <div class="info">
+            从 2023年9月20日 到 2025年10月21日，共768天
+        </div>
+    </div>
+
+    <script>
+        // 定义开始和结束日期
+        const startDate = new Date('2023-09-20');
+        const endDate = new Date('2025-10-21');
+        
+        // 计算总天数
+        const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
+        
+        // 动画总时长（毫秒）
+        const totalDuration = 2 * 60 * 1000 + 57 * 1000; // 2分57秒
+        
+        // 获取DOM元素
+        const dateDisplay = document.getElementById('dateDisplay');
+        const progressBar = document.getElementById('progressBar');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const timeDisplay = document.getElementById('timeDisplay');
+        
+        // 动画控制变量
+        let animationId = null;
+        let startTime = null;
+        let pausedTime = 0;
+        let isPlaying = false;
+        
+        // 格式化日期显示
+        function formatDate(date) {
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1;
+            const day = date.getDate();
+            return `${year}年${month}月${day}日`;
+        }
+        
+        // 格式化时间显示
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        // 更新动画
+        function updateAnimation(timestamp) {
+            if (!startTime) startTime = timestamp;
+            
+            const elapsed = timestamp - startTime + pausedTime;
+            const progress = Math.min(elapsed / totalDuration, 1);
+            
+            // 更新进度条
+            progressBar.style.width = `${progress * 100}%`;
+            
+            // 计算当前日期
+            const currentDays = Math.floor(progress * totalDays);
+            const currentDate = new Date(startDate);
+            currentDate.setDate(startDate.getDate() + currentDays);
+            
+            // 更新日期显示
+            dateDisplay.textContent = formatDate(currentDate);
+            
+            // 更新时间显示
+            const currentTime = Math.floor(elapsed / 1000);
+            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(totalDuration / 1000)}`;
+            
+            // 继续动画或结束
+            if (progress < 1) {
+                animationId = requestAnimationFrame(updateAnimation);
+            } else {
+                isPlaying = false;
+                playBtn.disabled = true;
+                pauseBtn.disabled = true;
+            }
+        }
+        
+        // 开始动画
+        function startAnimation() {
+            if (isPlaying) return;
+            
+            isPlaying = true;
+            playBtn.disabled = true;
+            pauseBtn.disabled = false;
+            
+            startTime = null;
+            animationId = requestAnimationFrame(updateAnimation);
+        }
+        
+        // 暂停动画
+        function pauseAnimation() {
+            if (!isPlaying) return;
+            
+            isPlaying = false;
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+            
+            cancelAnimationFrame(animationId);
+            pausedTime += performance.now() - startTime;
+        }
+        
+        // 重置动画
+        function resetAnimation() {
+            if (isPlaying) {
+                cancelAnimationFrame(animationId);
+                isPlaying = false;
+            }
+            
+            startTime = null;
+            pausedTime = 0;
+            
+            dateDisplay.textContent = formatDate(startDate);
+            progressBar.style.width = '0%';
+            timeDisplay.textContent = '00:00 / 02:57';
+            
+            playBtn.disabled = false;
+            pauseBtn.disabled = true;
+        }
+        
+        // 添加事件监听器
+        playBtn.addEventListener('click', startAnimation);
+        pauseBtn.addEventListener('click', pauseAnimation);
+        resetBtn.addEventListener('click', resetAnimation);
+        
+        // 初始化显示
+        dateDisplay.textContent = formatDate(startDate);
+    </script>
+</body>
+</html>
