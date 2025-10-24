@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RGB与CMYK调色器</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .color-preview {
+            height: 150px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .color-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .color-controls {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .control-group {
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .control-group h2 {
+            color: #444;
+            margin-bottom: 20px;
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .control-group h2::before {
+            content: "";
+            display: block;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+        
+        .rgb-title::before {
+            background: linear-gradient(90deg, #ff0000, #00ff00, #0000ff);
+        }
+        
+        .cmyk-title::before {
+            background: linear-gradient(90deg, #00ffff, #ff00ff, #ffff00, #000000);
+        }
+        
+        .color-slider {
+            margin-bottom: 20px;
+        }
+        
+        .color-slider label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .color-slider input[type="range"] {
+            width: 100%;
+            height: 10px;
+            border-radius: 5px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+        
+        .color-slider input[type="number"] {
+            width: 70px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .rgb-slider-red input[type="range"] {
+            background: linear-gradient(90deg, #000, #ff0000);
+        }
+        
+        .rgb-slider-green input[type="range"] {
+            background: linear-gradient(90deg, #000, #00ff00);
+        }
+        
+        .rgb-slider-blue input[type="range"] {
+            background: linear-gradient(90deg, #000, #0000ff);
+        }
+        
+        .cmyk-slider-cyan input[type="range"] {
+            background: linear-gradient(90deg, #fff, #00ffff);
+        }
+        
+        .cmyk-slider-magenta input[type="range"] {
+            background: linear-gradient(90deg, #fff, #ff00ff);
+        }
+        
+        .cmyk-slider-yellow input[type="range"] {
+            background: linear-gradient(90deg, #fff, #ffff00);
+        }
+        
+        .cmyk-slider-black input[type="range"] {
+            background: linear-gradient(90deg, #fff, #000);
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid #555;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .hex-value {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .conversion-info {
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div>
+            <h1>RGB与CMYK调色器</h1>
+            <p class="subtitle">通过滑块或数值输入调整颜色，实时预览颜色效果</p>
+        </div>
+        
+        <div class="color-preview" id="colorPreview">
+            颜色预览
+        </div>
+        
+        <div class="color-controls">
+            <div class="control-group">
+                <h2 class="rgb-title">RGB 调色器</h2>
+                
+                <div class="color-slider rgb-slider-red">
+                    <label>
+                        <span>红色 (R)</span>
+                        <input type="number" id="redValue" min="0" max="255" value="128">
+                    </label>
+                    <input type="range" id="redSlider" min="0" max="255" value="128">
+                </div>
+                
+                <div class="color-slider rgb-slider-green">
+                    <label>
+                        <span>绿色 (G)</span>
+                        <input type="number" id="greenValue" min="0" max="255" value="128">
+                    </label>
+                    <input type="range" id="greenSlider" min="0" max="255" value="128">
+                </div>
+                
+                <div class="color-slider rgb-slider-blue">
+                    <label>
+                        <span>蓝色 (B)</span>
+                        <input type="number" id="blueValue" min="0" max="255" value="128">
+                    </label>
+                    <input type="range" id="blueSlider" min="0" max="255" value="128">
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <h2 class="cmyk-title">CMYK 调色器</h2>
+                
+                <div class="color-slider cmyk-slider-cyan">
+                    <label>
+                        <span>青色 (C)</span>
+                        <input type="number" id="cyanValue" min="0" max="100" value="0">
+                    </label>
+                    <input type="range" id="cyanSlider" min="0" max="100" value="0">
+                </div>
+                
+                <div class="color-slider cmyk-slider-magenta">
+                    <label>
+                        <span>洋红色 (M)</span>
+                        <input type="number" id="magentaValue" min="0" max="100" value="0">
+                    </label>
+                    <input type="range" id="magentaSlider" min="0" max="100" value="0">
+                </div>
+                
+                <div class="color-slider cmyk-slider-yellow">
+                    <label>
+                        <span>黄色 (Y)</span>
+                        <input type="number" id="yellowValue" min="0" max="100" value="0">
+                    </label>
+                    <input type="range" id="yellowSlider" min="0" max="100" value="0">
+                </div>
+                
+                <div class="color-slider cmyk-slider-black">
+                    <label>
+                        <span>黑色 (K)</span>
+                        <input type="number" id="blackValue" min="0" max="100" value="50">
+                    </label>
+                    <input type="range" id="blackSlider" min="0" max="100" value="50">
+                </div>
+            </div>
+        </div>
+        
+        <div class="hex-value" id="hexValue">
+            #808080
+        </div>
+        
+        <p class="conversion-info">RGB和CMYK值会自动同步转换，调整任意一个调色器会更新另一个</p>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const colorPreview = document.getElementById('colorPreview');
+        const hexValue = document.getElementById('hexValue');
+        
+        // RGB元素
+        const redSlider = document.getElementById('redSlider');
+        const redValue = document.getElementById('redValue');
+        const greenSlider = document.getElementById('greenSlider');
+        const greenValue = document.getElementById('greenValue');
+        const blueSlider = document.getElementById('blueSlider');
+        const blueValue = document.getElementById('blueValue');
+        
+        // CMYK元素
+        const cyanSlider = document.getElementById('cyanSlider');
+        const cyanValue = document.getElementById('cyanValue');
+        const magentaSlider = document.getElementById('magentaSlider');
+        const magentaValue = document.getElementById('magentaValue');
+        const yellowSlider = document.getElementById('yellowSlider');
+        const yellowValue = document.getElementById('yellowValue');
+        const blackSlider = document.getElementById('blackSlider');
+        const blackValue = document.getElementById('blackValue');
+        
+        // 更新颜色预览
+        function updateColorPreview() {
+            const r = parseInt(redSlider.value);
+            const g = parseInt(greenSlider.value);
+            const b = parseInt(blueSlider.value);
+            
+            const rgbColor = `rgb(${r}, ${g}, ${b})`;
+            colorPreview.style.backgroundColor = rgbColor;
+            
+            // 根据亮度调整文本颜色
+            const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+            colorPreview.style.color = brightness > 128 ? 'black' : 'white';
+            
+            // 更新十六进制值
+            const hex = '#' + 
+                r.toString(16).padStart(2, '0') + 
+                g.toString(16).padStart(2, '0') + 
+                b.toString(16).padStart(2, '0');
+            hexValue.textContent = hex.toUpperCase();
+        }
+        
+        // RGB到CMYK转换
+        function rgbToCmyk(r, g, b) {
+            r = r / 255;
+            g = g / 255;
+            b = b / 255;
+            
+            const k = 1 - Math.max(r, g, b);
+            
+            if (k === 1) {
+                return { c: 0, m: 0, y: 0, k: 100 };
+            }
+            
+            const c = (1 - r - k) / (1 - k);
+            const m = (1 - g - k) / (1 - k);
+            const y = (1 - b - k) / (1 - k);
+            
+            return {
+                c: Math.round(c * 100),
+                m: Math.round(m * 100),
+                y: Math.round(y * 100),
+                k: Math.round(k * 100)
+            };
+        }
+        
+        // CMYK到RGB转换
+        function cmykToRgb(c, m, y, k) {
+            c = c / 100;
+            m = m / 100;
+            y = y / 100;
+            k = k / 100;
+            
+            const r = 255 * (1 - c) * (1 - k);
+            const g = 255 * (1 - m) * (1 - k);
+            const b = 255 * (1 - y) * (1 - k);
+            
+            return {
+                r: Math.round(r),
+                g: Math.round(g),
+                b: Math.round(b)
+            };
+        }
+        
+        // 更新CMYK值（基于RGB）
+        function updateCmykFromRgb() {
+            const r = parseInt(redSlider.value);
+            const g = parseInt(greenSlider.value);
+            const b = parseInt(blueSlider.value);
+            
+            const cmyk = rgbToCmyk(r, g, b);
+            
+            // 更新CMYK滑块和输入框（不触发事件）
+            cyanSlider.value = cmyk.c;
+            cyanValue.value = cmyk.c;
+            magentaSlider.value = cmyk.m;
+            magentaValue.value = cmyk.m;
+            yellowSlider.value = cmyk.y;
+            yellowValue.value = cmyk.y;
+            blackSlider.value = cmyk.k;
+            blackValue.value = cmyk.k;
+        }
+        
+        // 更新RGB值（基于CMYK）
+        function updateRgbFromCmyk() {
+            const c = parseInt(cyanSlider.value);
+            const m = parseInt(magentaSlider.value);
+            const y = parseInt(yellowSlider.value);
+            const k = parseInt(blackSlider.value);
+            
+            const rgb = cmykToRgb(c, m, y, k);
+            
+            // 更新RGB滑块和输入框（不触发事件）
+            redSlider.value = rgb.r;
+            redValue.value = rgb.r;
+            greenSlider.value = rgb.g;
+            greenValue.value = rgb.g;
+            blueSlider.value = rgb.b;
+            blueValue.value = rgb.b;
+        }
+        
+        // RGB滑块事件监听
+        redSlider.addEventListener('input', function() {
+            redValue.value = this.value;
+            updateColorPreview();
+            updateCmykFromRgb();
+        });
+        
+        greenSlider.addEventListener('input', function() {
+            greenValue.value = this.value;
+            updateColorPreview();
+            updateCmykFromRgb();
+        });
+        
+        blueSlider.addEventListener('input', function() {
+            blueValue.value = this.value;
+            updateColorPreview();
+            updateCmykFromRgb();
+        });
+        
+        // RGB输入框事件监听
+        redValue.addEventListener('input', function() {
+            redSlider.value = this.value;
+            updateColorPreview();
+            updateCmykFromRgb();
+        });
+        
+        greenValue.addEventListener('input', function() {
+            greenSlider.value = this.value;
+            updateColorPreview();
+            updateCmykFromRgb();
+        });
+        
+        blueValue.addEventListener('input', function() {
+            blueSlider.value = this.value;
+            updateColorPreview();
+            updateCmykFromRgb();
+        });
+        
+        // CMYK滑块事件监听
+        cyanSlider.addEventListener('input', function() {
+            cyanValue.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        magentaSlider.addEventListener('input', function() {
+            magentaValue.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        yellowSlider.addEventListener('input', function() {
+            yellowValue.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        blackSlider.addEventListener('input', function() {
+            blackValue.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        // CMYK输入框事件监听
+        cyanValue.addEventListener('input', function() {
+            cyanSlider.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        magentaValue.addEventListener('input', function() {
+            magentaSlider.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        yellowValue.addEventListener('input', function() {
+            yellowSlider.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        blackValue.addEventListener('input', function() {
+            blackSlider.value = this.value;
+            updateRgbFromCmyk();
+            updateColorPreview();
+        });
+        
+        // 初始化
+        updateColorPreview();
+        updateCmykFromRgb();
+    </script>
+</body>
+</html>
