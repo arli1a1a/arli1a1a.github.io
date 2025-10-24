@@ -3,268 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>日期变化动画</title>
+    <title>404 - 页面未找到</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 20px;
+            background: linear-gradient(135deg, #000000 0%, #333333 50%, #666666 100%);
+            color: #fff;
+            overflow: hidden;
+            position: relative;
         }
         
         .container {
             text-align: center;
-            max-width: 800px;
+            z-index: 10;
+            padding: 2rem;
+        }
+        
+        .error-code {
+            font-size: 15rem;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+            background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 50%, rgba(255,255,255,0.2) 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 
+                0 0 20px rgba(255, 255, 255, 0.3),
+                0 0 40px rgba(255, 255, 255, 0.2),
+                0 0 60px rgba(255, 255, 255, 0.1);
+        }
+        
+        .error-code::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            padding: 30px;
-            background-color: rgba(255, 255, 255, 0.9);
+            height: 100%;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 50%, transparent 100%);
             border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            filter: blur(10px);
+            z-index: -1;
         }
         
-        h1 {
-            color: #333;
-            margin-bottom: 30px;
+        .error-code::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            width: calc(100% - 20px);
+            height: calc(100% - 20px);
+            background: linear-gradient(135deg, rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.1) 50%, transparent 100%);
+            border-radius: 15px;
+            z-index: -1;
+        }
+        
+        .message {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .home-btn {
+            display: inline-block;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            text-decoration: none;
+            border-radius: 30px;
             font-weight: 600;
-        }
-        
-        .date-display {
-            font-size: 4rem;
-            font-weight: 300;
-            color: #1d1d1f;
-            margin: 40px 0;
-            letter-spacing: -1px;
-            min-height: 120px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .progress-container {
-            width: 100%;
-            height: 8px;
-            background-color: #e0e0e0;
-            border-radius: 4px;
-            margin: 30px 0;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
             overflow: hidden;
         }
         
-        .progress-bar {
+        .home-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+        
+        .home-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .home-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, #007AFF, #5856D6);
-            width: 0%;
-            border-radius: 4px;
-            transition: width 0.1s linear;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
         }
         
-        .controls {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-top: 20px;
+        .home-btn:hover::before {
+            left: 100%;
         }
         
-        button {
-            padding: 12px 25px;
-            font-size: 16px;
-            border: none;
-            border-radius: 10px;
-            background-color: #007AFF;
-            color: white;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-weight: 500;
+        .particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
         
-        button:hover {
-            background-color: #0056CC;
-            transform: translateY(-2px);
+        .particle {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
         }
         
-        button:active {
-            transform: translateY(0);
+        @keyframes float {
+            0% {
+                transform: translateY(0) translateX(0) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px) rotate(360deg);
+                opacity: 0;
+            }
         }
         
-        button:disabled {
-            background-color: #C7C7CC;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
-        .info {
-            margin-top: 25px;
-            color: #8E8E93;
-            font-size: 14px;
-        }
-        
-        .time-display {
-            font-size: 1.2rem;
-            color: #1d1d1f;
-            margin-top: 15px;
-        }
-        
-        @media (max-width: 600px) {
-            .date-display {
-                font-size: 2.5rem;
-                min-height: 90px;
+        @media (max-width: 768px) {
+            .error-code {
+                font-size: 10rem;
             }
             
-            button {
-                padding: 10px 20px;
-                font-size: 14px;
+            .message {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .error-code {
+                font-size: 7rem;
+            }
+            
+            .message {
+                font-size: 1rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="particles" id="particles"></div>
+    
     <div class="container">
-        <h1>日期变化动画</h1>
-        <div class="date-display" id="dateDisplay">2023年9月20日</div>
-        <div class="time-display" id="timeDisplay">00:00 / 02:57</div>
-        <div class="progress-container">
-            <div class="progress-bar" id="progressBar"></div>
-        </div>
-        <div class="controls">
-            <button id="playBtn">开始</button>
-            <button id="pauseBtn" disabled>暂停</button>
-            <button id="resetBtn">重置</button>
-        </div>
-        <div class="info">
-            从 2023年9月20日 到 2025年10月21日，共768天
-        </div>
+        <div class="error-code">403</div>
+        <p class="message">抱歉，您无权访问此页面</p>
     </div>
 
     <script>
-        // 定义开始和结束日期
-        const startDate = new Date('2023-09-20');
-        const endDate = new Date('2025-10-21');
-        
-        // 计算总天数
-        const totalDays = Math.floor((endDate - startDate) / (1000 * 60 * 60 * 24));
-        
-        // 动画总时长（毫秒）
-        const totalDuration = 2 * 60 * 1000 + 57 * 1000; // 2分57秒
-        
-        // 获取DOM元素
-        const dateDisplay = document.getElementById('dateDisplay');
-        const progressBar = document.getElementById('progressBar');
-        const playBtn = document.getElementById('playBtn');
-        const pauseBtn = document.getElementById('pauseBtn');
-        const resetBtn = document.getElementById('resetBtn');
-        const timeDisplay = document.getElementById('timeDisplay');
-        
-        // 动画控制变量
-        let animationId = null;
-        let startTime = null;
-        let pausedTime = 0;
-        let isPlaying = false;
-        
-        // 格式化日期显示
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-            const day = date.getDate();
-            return `${year}年${month}月${day}日`;
-        }
-        
-        // 格式化时间显示
-        function formatTime(seconds) {
-            const mins = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-        }
-        
-        // 更新动画
-        function updateAnimation(timestamp) {
-            if (!startTime) startTime = timestamp;
+        // 创建背景粒子效果
+        document.addEventListener('DOMContentLoaded', function() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
             
-            const elapsed = timestamp - startTime + pausedTime;
-            const progress = Math.min(elapsed / totalDuration, 1);
-            
-            // 更新进度条
-            progressBar.style.width = `${progress * 100}%`;
-            
-            // 计算当前日期
-            const currentDays = Math.floor(progress * totalDays);
-            const currentDate = new Date(startDate);
-            currentDate.setDate(startDate.getDate() + currentDays);
-            
-            // 更新日期显示
-            dateDisplay.textContent = formatDate(currentDate);
-            
-            // 更新时间显示
-            const currentTime = Math.floor(elapsed / 1000);
-            timeDisplay.textContent = `${formatTime(currentTime)} / ${formatTime(totalDuration / 1000)}`;
-            
-            // 继续动画或结束
-            if (progress < 1) {
-                animationId = requestAnimationFrame(updateAnimation);
-            } else {
-                isPlaying = false;
-                playBtn.disabled = true;
-                pauseBtn.disabled = true;
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // 随机大小
+                const size = Math.random() * 20 + 5;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // 随机位置
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // 随机动画延迟
+                particle.style.animationDelay = `${Math.random() * 15}s`;
+                
+                // 随机动画时长
+                particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+                
+                particlesContainer.appendChild(particle);
             }
-        }
-        
-        // 开始动画
-        function startAnimation() {
-            if (isPlaying) return;
-            
-            isPlaying = true;
-            playBtn.disabled = true;
-            pauseBtn.disabled = false;
-            
-            startTime = null;
-            animationId = requestAnimationFrame(updateAnimation);
-        }
-        
-        // 暂停动画
-        function pauseAnimation() {
-            if (!isPlaying) return;
-            
-            isPlaying = false;
-            playBtn.disabled = false;
-            pauseBtn.disabled = true;
-            
-            cancelAnimationFrame(animationId);
-            pausedTime += performance.now() - startTime;
-        }
-        
-        // 重置动画
-        function resetAnimation() {
-            if (isPlaying) {
-                cancelAnimationFrame(animationId);
-                isPlaying = false;
-            }
-            
-            startTime = null;
-            pausedTime = 0;
-            
-            dateDisplay.textContent = formatDate(startDate);
-            progressBar.style.width = '0%';
-            timeDisplay.textContent = '00:00 / 02:57';
-            
-            playBtn.disabled = false;
-            pauseBtn.disabled = true;
-        }
-        
-        // 添加事件监听器
-        playBtn.addEventListener('click', startAnimation);
-        pauseBtn.addEventListener('click', pauseAnimation);
-        resetBtn.addEventListener('click', resetAnimation);
-        
-        // 初始化显示
-        dateDisplay.textContent = formatDate(startDate);
+        });
     </script>
 </body>
 </html>
