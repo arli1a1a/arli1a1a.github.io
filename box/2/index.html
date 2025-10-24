@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>有余数的除法计算器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8B0000, #B22222, #DC143C);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .calculator {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(139, 0, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            color: #8B0000;
+            margin-bottom: 20px;
+            font-size: 28px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        
+        .description {
+            color: #555;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #8B0000;
+            width: 40%;
+            text-align: right;
+            padding-right: 15px;
+        }
+        
+        input {
+            width: 60%;
+            padding: 12px 15px;
+            border: 2px solid #DC143C;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #8B0000;
+            box-shadow: 0 0 8px rgba(139, 0, 0, 0.3);
+        }
+        
+        button {
+            background: linear-gradient(to right, #8B0000, #B22222);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 25px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 10px 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background: linear-gradient(to right, #B22222, #DC143C);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #FFF5F5;
+            border-left: 5px solid #8B0000;
+            text-align: left;
+            display: none;
+        }
+        
+        .result h2 {
+            color: #8B0000;
+            margin-bottom: 15px;
+            font-size: 22px;
+        }
+        
+        .calculation {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .error {
+            color: #DC143C;
+            font-weight: 600;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .footer {
+            margin-top: 25px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 500px) {
+            .input-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            label {
+                width: 100%;
+                text-align: left;
+                padding-right: 0;
+                margin-bottom: 5px;
+            }
+            
+            input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <h1>有余数的除法计算器</h1>
+        <p class="description">输入被除数和除数，计算商和余数。除数不能为零。</p>
+        
+        <div class="input-group">
+            <div class="input-row">
+                <label for="dividend">被除数：</label>
+                <input type="number" id="dividend" placeholder="输入被除数">
+            </div>
+            <div class="input-row">
+                <label for="divisor">除数：</label>
+                <input type="number" id="divisor" placeholder="输入除数">
+            </div>
+        </div>
+        
+        <button id="calculate">计算</button>
+        <button id="reset">重置</button>
+        
+        <div class="error" id="error-message"></div>
+        
+        <div class="result" id="result">
+            <h2>计算结果</h2>
+            <p class="calculation" id="calculation-text"></p>
+            <p class="calculation" id="result-text"></p>
+        </div>
+        
+        <div class="footer">
+            <p>Arli1a1a</p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const dividendInput = document.getElementById('dividend');
+            const divisorInput = document.getElementById('divisor');
+            const calculateBtn = document.getElementById('calculate');
+            const resetBtn = document.getElementById('reset');
+            const resultDiv = document.getElementById('result');
+            const errorMessage = document.getElementById('error-message');
+            const calculationText = document.getElementById('calculation-text');
+            const resultText = document.getElementById('result-text');
+            
+            // 计算按钮点击事件
+            calculateBtn.addEventListener('click', function() {
+                // 获取输入值
+                const dividend = parseFloat(dividendInput.value);
+                const divisor = parseFloat(divisorInput.value);
+                
+                // 验证输入
+                if (isNaN(dividend) || isNaN(divisor)) {
+                    showError("请输入有效的数字！");
+                    return;
+                }
+                
+                if (divisor === 0) {
+                    showError("除数不能为零！");
+                    return;
+                }
+                
+                // 计算商和余数
+                const quotient = Math.floor(dividend / divisor);
+                const remainder = dividend % divisor;
+                
+                // 显示结果
+                calculationText.textContent = `${dividend} ÷ ${divisor} = ${quotient} ... ${remainder}`;
+                resultText.textContent = `商：${quotient}，余数：${remainder}`;
+                
+                resultDiv.style.display = 'block';
+                errorMessage.style.display = 'none';
+            });
+            
+            // 重置按钮点击事件
+            resetBtn.addEventListener('click', function() {
+                dividendInput.value = '';
+                divisorInput.value = '';
+                resultDiv.style.display = 'none';
+                errorMessage.style.display = 'none';
+            });
+            
+            // 显示错误信息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                resultDiv.style.display = 'none';
+            }
+            
+            // 按Enter键触发计算
+            document.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    calculateBtn.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
