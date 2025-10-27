@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>中国移动服务站</title>
+    <style>
+        /* 全局样式 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #e60012;
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 40px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #ffcc00;
+        }
+        
+        /* 横幅样式 */
+        .banner {
+            background: linear-gradient(135deg, #e60012, #ff4d4d);
+            color: white;
+            padding: 60px 0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .banner h2 {
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+        
+        .banner p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: 0 auto 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #ffcc00;
+            color: #333;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #ffdb4d;
+        }
+        
+        /* 服务区域样式 */
+        .services {
+            padding: 50px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #e60012;
+            font-size: 28px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .service-icon {
+            font-size: 40px;
+            color: #e60012;
+            margin-bottom: 15px;
+        }
+        
+        .service-card h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        /* 套餐区域样式 */
+        .plans {
+            background-color: white;
+            padding: 50px 0;
+        }
+        
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .plan-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .plan-card.featured {
+            border-color: #e60012;
+            box-shadow: 0 5px 15px rgba(230, 0, 18, 0.1);
+            transform: scale(1.05);
+        }
+        
+        .plan-card h3 {
+            color: #e60012;
+            margin-bottom: 15px;
+        }
+        
+        .price {
+            font-size: 32px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+        
+        .price span {
+            font-size: 16px;
+            color: #666;
+        }
+        
+        .plan-features {
+            list-style: none;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        
+        .plan-features li {
+            padding: 8px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+        
+        .plan-features li:last-child {
+            border-bottom: none;
+        }
+        
+        /* 底部样式 */
+        footer {
+            background-color: #333;
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-column h3 {
+            color: #ffcc00;
+            margin-bottom: 20px;
+            font-size: 18px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-column ul li a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: white;
+        }
+        
+        .contact-info p {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .contact-info i {
+            margin-right: 10px;
+            color: #ffcc00;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid #444;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-bottom: 15px;
+            }
+            
+            nav ul {
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0 10px;
+            }
+            
+            .banner h2 {
+                font-size: 28px;
+            }
+            
+            .plan-card.featured {
+                transform: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 头部区域 -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <!-- 这里使用文字代替实际logo -->
+                    <div style="background: white; color: #e60012; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; font-weight: bold; border-radius: 5px;">CM</div>
+                    <h1>中国移动</h1>
+                </div>
+                <nav>
+                    <ul>
+                        <li><a href="#">首页</a></li>
+                        <li><a href="#">业务办理</a></li>
+                        <li><a href="#">套餐查询</a></li>
+                        <li><a href="#">服务网点</a></li>
+                        <li><a href="#">在线客服</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- 横幅区域 -->
+    <section class="banner">
+        <div class="container">
+            <h2>中国移动，全心全意为您服务</h2>
+            <p>提供优质通信服务，畅享高速网络体验，随时随地连接世界</p>
+            <a href="#" class="btn">立即办理</a>
+        </div>
+    </section>
+
+    <!-- 服务区域 -->
+    <section class="services">
+        <div class="container">
+            <h2 class="section-title">我们的服务</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3>手机业务</h3>
+                    <p>办理手机号码、套餐变更、国际漫游等业务</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🏠</div>
+                    <h3>家庭宽带</h3>
+                    <p>高速光纤宽带，畅享智能家居生活</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">💳</div>
+                    <h3>话费充值</h3>
+                    <p>快速充值，多种支付方式，方便快捷</p>
+                </div>
+                <div class="service-card">
+                    <div class="service-icon">🛠️</div>
+                    <h3>业务咨询</h3>
+                    <p>专业客服团队，解答您的各种疑问</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 套餐区域 -->
+    <section class="plans">
+        <div class="container">
+            <h2 class="section-title">热门套餐</h2>
+            <div class="plans-grid">
+                <div class="plan-card">
+                    <h3>畅享套餐</h3>
+                    <div class="price">¥58<span>/月</span></div>
+                    <ul class="plan-features">
+                        <li>20GB全国流量</li>
+                        <li>100分钟通话时长</li>
+                        <li>免费来电显示</li>
+                        <li>全国接听免费</li>
+                    </ul>
+                    <a href="#" class="btn">立即办理</a>
+                </div>
+                <div class="plan-card featured">
+                    <h3>5G畅爽套餐</h3>
+                    <div class="price">¥128<span>/月</span></div>
+                    <ul class="plan-features">
+                        <li>60GB 5G流量</li>
+                        <li>500分钟通话时长</li>
+                        <li>免费来电显示</li>
+                        <li>全国接听免费</li>
+                        <li>5G极速服务</li>
+                    </ul>
+                    <a href="#" class="btn">立即办理</a>
+                </div>
+                <div class="plan-card">
+                    <h3>全球通尊享</h3>
+                    <div class="price">¥288<span>/月</span></div>
+                    <ul class="plan-features">
+                        <li>100GB全国流量</li>
+                        <li>1000分钟通话时长</li>
+                        <li>国际漫游优惠</li>
+                        <li>VIP客户服务</li>
+                        <li>机场贵宾厅</li>
+                    </ul>
+                    <a href="#" class="btn">立即办理</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 底部区域 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul>
+                        <li><a href="#">公司简介</a></li>
+                        <li><a href="#">企业文化</a></li>
+                        <li><a href="#">发展历程</a></li>
+                        <li><a href="#">荣誉资质</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>客户服务</h3>
+                    <ul>
+                        <li><a href="#">业务办理</a></li>
+                        <li><a href="#">套餐查询</a></li>
+                        <li><a href="#">投诉建议</a></li>
+                        <li><a href="#">常见问题</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <div class="contact-info">
+                        <p><i>📞</i> 客服热线：10086</p>
+                        <p><i>📍</i> 地址：北京市西城区金融大街29号</p>
+                        <p><i>✉️</i> 邮箱：service@chinamobile.com</p>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 中国移动通信集团有限公司 版权所有</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
