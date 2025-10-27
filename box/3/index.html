@@ -3,126 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>工具暂时无法访问</title>
+    <title>进制转换器</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
         body {
-            background-color: #f8f9fa;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #333;
-            line-height: 1.6;
-            display: flex;
-            flex-direction: column;
             min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 20px;
         }
         
         .container {
+            width: 100%;
             max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            padding: 40px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .error-icon {
-            font-size: 80px;
-            text-align: center;
-            margin-bottom: 30px;
-            color: #ff6b6b;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            transition: all 0.3s ease;
         }
         
         h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-            color: #2c3e50;
             text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+            font-size: 2.2rem;
+            position: relative;
+            padding-bottom: 15px;
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            border-radius: 2px;
         }
         
         .description {
-            font-size: 18px;
-            margin-bottom: 30px;
             text-align: center;
-            color: #555;
-        }
-        
-        .reason-list {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
             margin-bottom: 30px;
+            color: #555;
+            line-height: 1.6;
         }
         
-        .reason-list h2 {
-            font-size: 20px;
+        .converter {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-section, .output-section {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+        
+        .section-title {
+            font-size: 1.2rem;
             margin-bottom: 15px;
             color: #2c3e50;
+            display: flex;
+            align-items: center;
         }
         
-        .reason-list ul {
-            padding-left: 20px;
+        .section-title i {
+            margin-right: 10px;
+            color: #6a11cb;
         }
         
-        .reason-list li {
-            margin-bottom: 10px;
-        }
-        
-        .actions {
+        .input-group {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
-            justify-content: center;
-            margin-top: 20px;
+            margin-bottom: 15px;
         }
         
-        .btn {
-            padding: 12px 24px;
-            border-radius: 6px;
-            text-decoration: none;
+        .input-field {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .base-selector {
+            width: 120px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: 600;
-            transition: all 0.3s ease;
-            display: inline-block;
-            cursor: pointer;
-            border: none;
-            font-size: 16px;
+            color: #444;
         }
         
-        .btn-primary {
-            background-color: #3498db;
-            color: white;
+        input, select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
         }
         
-        .btn-primary:hover {
-            background-color: #2980b9;
+        input:focus, select:focus {
+            border-color: #6a11cb;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(106, 17, 203, 0.2);
         }
         
-        .btn-secondary {
-            background-color: #ecf0f1;
+        .output-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 15px;
+        }
+        
+        .output-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #6a11cb;
+        }
+        
+        .output-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .output-value {
+            font-size: 1.1rem;
+            font-weight: 600;
             color: #2c3e50;
+            word-break: break-all;
         }
         
-        .btn-secondary:hover {
-            background-color: #d5dbdb;
+        .error-message {
+            color: #e74c3c;
+            font-weight: 600;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 8px;
+            display: none;
         }
         
-        .status-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #eee;
-            font-size: 14px;
+        .max-value {
+            text-align: center;
+            margin-top: 15px;
             color: #7f8c8d;
+            font-size: 0.9rem;
         }
         
         @media (max-width: 600px) {
@@ -131,40 +173,162 @@
             }
             
             h1 {
-                font-size: 24px;
+                font-size: 1.8rem;
             }
             
-            .description {
-                font-size: 16px;
-            }
-            
-            .actions {
+            .input-group {
                 flex-direction: column;
             }
             
-            .btn {
-                width: 100%;
-                text-align: center;
+            .input-field, .base-selector {
+                min-width: 100%;
+            }
+            
+            .output-group {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="error-icon">⚠️</div>
-        <h1>工具已锁定</h1>
-        <p class="description">
-            很抱歉，您尝试访问的工具当前遇已被管理员锁定
-        </p>
+        <h1>进制转换器</h1>
+        <p class="description"></p>
         
-  
-        
-       
-        
-        <div class="status-info">
-            <span>错误代码: 503 Service Unavailable</span>
-            <span>预计恢复时间: 无</span>
+        <div class="converter">
+            <div class="input-section">
+                <div class="section-title">
+                    <i>➤</i> 输入数值
+                </div>
+                <div class="input-group">
+                    <div class="input-field">
+                        <label for="inputValue">数值</label>
+                        <input type="text" id="inputValue" placeholder="输入要转换的数值">
+                    </div>
+                    <div class="base-selector">
+                        <label for="inputBase">进制</label>
+                        <select id="inputBase">
+                            <option value="2">二进制 (2)</option>
+                            <option value="4">四进制 (4)</option>
+                            <option value="8">八进制 (8)</option>
+                            <option value="10" selected>十进制 (10)</option>
+                            <option value="13">十三进制 (13)</option>
+                            <option value="16">十六进制 (16)</option>
+                            <option value="26">二十六进制 (26)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="error-message" id="errorMessage"></div>
+            </div>
+            
+            <div class="output-section">
+                <div class="section-title">
+                    <i>⇄</i> 转换结果
+                </div>
+                <div class="output-group" id="outputGroup">
+                    <!-- 输出结果将在这里动态生成 -->
+                </div>
+                <div class="max-value">arli1a1a</div>
+            </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const inputValue = document.getElementById('inputValue');
+            const inputBase = document.getElementById('inputBase');
+            const outputGroup = document.getElementById('outputGroup');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // 支持的进制
+            const bases = [2, 4, 8, 10, 13, 16, 26];
+            const MAX_VALUE = 2147483647;
+            
+            // 初始化输出区域
+            function initOutputGroup() {
+                outputGroup.innerHTML = '';
+                bases.forEach(base => {
+                    const outputItem = document.createElement('div');
+                    outputItem.className = 'output-item';
+                    outputItem.innerHTML = `
+                        <div class="output-label">${base}进制</div>
+                        <div class="output-value" id="output-${base}">-</div>
+                    `;
+                    outputGroup.appendChild(outputItem);
+                });
+            }
+            
+            // 进制转换函数
+            function convertBase(value, fromBase, toBase) {
+                // 先转换为十进制
+                let decimalValue = parseInt(value, fromBase);
+                
+                // 检查是否溢出
+                if (decimalValue > MAX_VALUE) {
+                    throw new Error('数值超出最大限制');
+                }
+                
+                // 检查是否为有效数字
+                if (isNaN(decimalValue)) {
+                    throw new Error('无效的数值或进制');
+                }
+                
+                // 从十进制转换为目标进制
+                if (toBase === 10) {
+                    return decimalValue.toString();
+                }
+                
+                return decimalValue.toString(toBase).toUpperCase();
+            }
+            
+            // 更新所有输出
+            function updateOutputs() {
+                const value = inputValue.value.trim();
+                const fromBase = parseInt(inputBase.value);
+                
+                // 清除错误信息
+                errorMessage.style.display = 'none';
+                
+                // 如果输入为空，清空输出
+                if (value === '') {
+                    bases.forEach(base => {
+                        document.getElementById(`output-${base}`).textContent = '-';
+                    });
+                    return;
+                }
+                
+                try {
+                    // 更新每个进制的输出
+                    bases.forEach(base => {
+                        if (base === fromBase) {
+                            document.getElementById(`output-${base}`).textContent = value;
+                        } else {
+                            const result = convertBase(value, fromBase, base);
+                            document.getElementById(`output-${base}`).textContent = result;
+                        }
+                    });
+                } catch (error) {
+                    // 显示错误信息
+                    errorMessage.textContent = error.message;
+                    errorMessage.style.display = 'block';
+                    
+                    // 清空输出
+                    bases.forEach(base => {
+                        document.getElementById(`output-${base}`).textContent = '-';
+                    });
+                }
+            }
+            
+            // 事件监听
+            inputValue.addEventListener('input', updateOutputs);
+            inputBase.addEventListener('change', updateOutputs);
+            
+            // 初始化
+            initOutputGroup();
+            
+            // 添加示例值
+            inputValue.placeholder = "例如: " + (inputBase.value === "10" ? "255" : "FF");
+        });
+    </script>
 </body>
 </html>
