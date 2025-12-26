@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html style="cursor:default;background-color: #fff;" leftmargin="0" topmargin="0" οncοntextmenu="return false" οndragstart="return false" onselectstart="return false" οnselect="document.selection.empty()" οncοpy="document.selection.empty()" onbeforecopy="return false" οnmοuseup="document.selection.empty()" ondragstart="return false;" oncontextmenu="return false;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>锦云幻月个人网站 - 英雄出装</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #1a0b1e;
+            color: #f1f1f1;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* 头部样式 */
+        .header {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #7a1c5c 0%, #1a0b1e 100%);
+            padding: 25px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            margin-bottom: 30px;
+            border: 1px solid #3a1b3a;
+        }
+
+        .avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            border: 4px solid #ff6bc9;
+            object-fit: cover;
+            margin-right: 25px;
+            box-shadow: 0 5px 15px rgba(255, 107, 201, 0.3);
+        }
+
+        .user-info h1 {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            color: #ff6bc9;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .user-info p {
+            font-size: 1.2rem;
+            color: #e0b0d5;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: linear-gradient(to right, #ff9a9e, #ff6bc9);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        /* 导航按钮样式 */
+        .hero-nav {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            gap: 10px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: rgba(122, 28, 92, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none; /* Firefox */
+        }
+
+            .hero-nav::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Opera */
+            }
+
+        .nav-btn {
+            background-color: #3a1b3a;
+            border: none;
+            color: #e0b0d5;
+            padding: 14px 20px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-width: 140px;
+            flex: 1;
+            white-space: nowrap;
+        }
+
+            .nav-btn:hover {
+                background-color: #5a2b5a;
+                color: #ff6bc9;
+                transform: translateY(-3px);
+                box-shadow: 0 5px 15px rgba(255, 107, 201, 0.2);
+            }
+
+            .nav-btn.active {
+                background: linear-gradient(135deg, #ff6bc9 0%, #ff2b95 100%);
+                color: white;
+                box-shadow: 0 5px 15px rgba(255, 107, 201, 0.4);
+            }
+
+            .nav-btn i {
+                font-size: 1.3rem;
+            }
+
+        /* 英雄出装内容样式 */
+        .hero-content {
+            background-color: #2a0f2a;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            display: none;
+            animation: fadeIn 0.5s ease;
+            border: 1px solid #3a1b3a;
+        }
+
+            .hero-content.active {
+                display: block;
+            }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #3a1b3a;
+        }
+
+        .hero-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 10px;
+            margin-right: 20px;
+            border: 2px solid #ff6bc9;
+            object-fit: cover;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+            color: #ff6bc9;
+        }
+
+        .hero-role {
+            display: inline-block;
+            background-color: #7a1c5c;
+            color: #e0b0d5;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin-top: 8px;
+        }
+
+        /* 出装区域样式 */
+        .build-section {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .build-column {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .build-title {
+            font-size: 1.5rem;
+            color: #ff6bc9;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #3a1b3a;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .items-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .item {
+            background-color: #1a0b1e;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #3a1b3a;
+        }
+
+            .item:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(255, 107, 201, 0.2);
+                border-color: #ff6bc9;
+            }
+
+        .item-img {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 2px solid #7a1c5c;
+        }
+
+        .item-name {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #f1f1f1;
+        }
+
+        .item-desc {
+            font-size: 0.8rem;
+            color: #e0b0d5;
+            margin-top: 5px;
+        }
+
+        .skill-order {
+            background-color: #1a0b1e;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border: 1px solid #3a1b3a;
+        }
+
+        .skill-title {
+            font-size: 1.5rem;
+            color: #ff6bc9;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .skill-sequence {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .skill-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #7a1c5c;
+            padding: 10px;
+            border-radius: 8px;
+            min-width: 60px;
+        }
+
+        .level-number {
+            font-size: 0.9rem;
+            color: #e0b0d5;
+            margin-bottom: 5px;
+        }
+
+        .skill-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #1a0b1e;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #ff6bc9;
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1024px) {
+            .nav-btn {
+                min-width: 120px;
+                padding: 12px 15px;
+                font-size: 1rem;
+            }
+
+                .nav-btn i {
+                    font-size: 1.1rem;
+                }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 20px;
+            }
+
+            .avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+
+            .hero-nav {
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .nav-btn {
+                min-width: 110px;
+                padding: 10px 12px;
+                font-size: 0.9rem;
+            }
+
+                .nav-btn i {
+                    font-size: 1rem;
+                }
+
+            .hero-title {
+                font-size: 1.8rem;
+            }
+
+            .build-column {
+                min-width: 100%;
+            }
+
+            .items-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-nav {
+                gap: 6px;
+            }
+
+            .nav-btn {
+                min-width: 100px;
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+
+                .nav-btn span {
+                    display: none;
+                }
+
+                .nav-btn i {
+                    font-size: 1.2rem;
+                    margin: 0;
+                }
+
+            .items-container {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-content {
+                padding: 20px;
+            }
+
+            .hero-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .hero-icon {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #3a1b3a;
+            color: #e0b0d5;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部区域 -->
+        <header class="header">
+            <img src="https://randomuser.me/api/portraits/women/42.jpg" alt="用户头像" class="avatar">
+            <div class="user-info">
+                <h1>锦云幻月</h1>
+                <p>王者荣耀资深玩家 | 擅长对抗与射手位置</p>
+                <div class="level-badge">金标亚连 / 金标艾琳</div>
+            </div>
+        </header>
+
+        <!-- 英雄导航按钮 -->
+        <nav class="hero-nav">
+            <button class="nav-btn" data-hero="assassin">
+                <i class="fas fa-user-ninja"></i><span>0 - 苏离/蚩姹</span>
+            </button>
+            <button class="nav-btn active" data-hero="archer">
+                <i class="fas fa-bow-arrow"></i><span>1 - 亚连坦克流派</span>
+            </button>
+            <button class="nav-btn" data-hero="warrior">
+                <i class="fas fa-shield-alt"></i><span>1 - 亚连暴击流派</span>
+            </button>
+            <button class="nav-btn" data-hero="mage">
+                <i class="fas fa-hat-wizard"></i><span>2 - 艾琳</span>
+            </button>
+            <button class="nav-btn" data-hero="support">
+                <i class="fas fa-hand-holding-heart"></i><span>3 - 兰铎/公孙离</span>
+            </button>
+        </nav>
+
+        <!-- 英雄1: 影流刺客 -->
+        <section id="assassin" class="hero-content">
+            <div class="hero-header">
+                <img src="0.png" alt="影流刺客" class="hero-icon">
+                <div>
+                    <h2 class="hero-title">五兵之主 · 蚩姹</h2>
+                    <div class="hero-role">定位：战士 | AOV对应英雄：苏离 | 锦云幻月0号主英雄</div>
+                </div>
+            </div>
+
+            <div class="build-section">
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-shopping-bag"></i> 核心出装</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/dagger.png" alt="幽影之刃" class="item-img">
+                            <div class="item-name">幽影之刃</div>
+                            <div class="item-desc">+80攻击力，+15%冷却缩减</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/boots.png" alt="疾行战靴" class="item-img">
+                            <div class="item-name">疾行战靴</div>
+                            <div class="item-desc">+45移动速度，+10%攻击速度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/thor-hammer.png" alt="雷霆之怒" class="item-img">
+                            <div class="item-name">雷霆之怒</div>
+                            <div class="item-desc">+70攻击力，+20%暴击率</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/ghost.png" alt="幻影之舞" class="item-img">
+                            <div class="item-name">幻影之舞</div>
+                            <div class="item-desc">+30%攻击速度，+25%暴击率</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/broken-heart.png" alt="破败王者" class="item-img">
+                            <div class="item-name">破败王者</div>
+                            <div class="item-desc">+40攻击力，+25%攻击速度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/shield.png" alt="守护天使" class="item-img">
+                            <div class="item-name">守护天使</div>
+                            <div class="item-desc">+45攻击力，+40护甲</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-flask"></i> 符文选择</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/lightning-bolt.png" alt="电刑" class="item-img">
+                            <div class="item-name">电刑</div>
+                            <div class="item-desc">连续命中3次后造成额外伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/sprint.png" alt="猛然冲击" class="item-img">
+                            <div class="item-name">猛然冲击</div>
+                            <div class="item-desc">使用位移后获得穿透加成</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/eye.png" alt="眼球收集器" class="item-img">
+                            <div class="item-name">眼球收集器</div>
+                            <div class="item-desc">参与击杀后获得攻击力</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/treasure-map.png" alt="贪欲猎手" class="item-img">
+                            <div class="item-name">贪欲猎手</div>
+                            <div class="item-desc">技能造成伤害可回复生命</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/target.png" alt="致命一击" class="item-img">
+                            <div class="item-name">致命一击</div>
+                            <div class="item-desc">对低生命值目标造成更多伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/activity-feed.png" alt="欢欣" class="item-img">
+                            <div class="item-name">欢欣</div>
+                            <div class="item-desc">永久获得攻击速度</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-order">
+                <h3 class="skill-title"><i class="fas fa-sort-amount-up"></i> 技能加点顺序</h3>
+                <div class="skill-sequence">
+                    <div class="skill-level">
+                        <div class="level-number">1级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">2级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">3级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">4级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">5级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">6级</div>
+                        <div class="skill-icon">R</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">7级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">8级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">9级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">10级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 英雄2: 精灵射手 (默认选中) -->
+        <section id="archer" class="hero-content active">
+            <div class="hero-header">
+                <img src="1.png" alt="精灵射手" class="hero-icon">
+                <div>
+                    <h2 class="hero-title">追忆之刃 · 亚连</h2>
+                    <div class="hero-role">定位：战士 | AOV对应英雄：亚连 | 锦云幻月1号主英雄</div>
+                </div>
+            </div>
+
+            <div class="build-section">
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-shopping-bag"></i> 核心出装</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/bow-arrow.png" alt="飓风长弓" class="item-img">
+                            <div class="item-name">影忍之足</div>
+                            <div class="item-desc">+100物理防御<br />+50法术防御</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/barefoot.png" alt="狂战士胫甲" class="item-img">
+                            <div class="item-name">狂战士胫甲</div>
+                            <div class="item-desc">+35%攻击速度，+45移动速度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/sword.png" alt="无尽之刃" class="item-img">
+                            <div class="item-name">无尽之刃</div>
+                            <div class="item-desc">+80攻击力，+25%暴击率</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/katana.png" alt="幻影之舞" class="item-img">
+                            <div class="item-name">幻影之舞</div>
+                            <div class="item-desc">+30%攻击速度，+25%暴击率</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/critical.png" alt="多米尼克领主" class="item-img">
+                            <div class="item-name">多米尼克领主</div>
+                            <div class="item-desc">+40攻击力，+35%护甲穿透</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/lifesteal.png" alt="饮血剑" class="item-img">
+                            <div class="item-name">饮血剑</div>
+                            <div class="item-desc">+80攻击力，+20%生命偷取</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-flask"></i> 符文选择</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/fast-forward.png" alt="致命节奏" class="item-img">
+                            <div class="item-name">致命节奏</div>
+                            <div class="item-desc">攻击英雄时获得攻击速度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/victory.png" alt="凯旋" class="item-img">
+                            <div class="item-name">凯旋</div>
+                            <div class="item-desc">参与击杀后回复生命值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/like.png" alt="传说：欢欣" class="item-img">
+                            <div class="item-name">传说：欢欣</div>
+                            <div class="item-desc">永久获得攻击速度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/target.png" alt="致命一击" class="item-img">
+                            <div class="item-name">致命一击</div>
+                            <div class="item-desc">对低生命值目标造成更多伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/magic-carpet.png" alt="绝对专注" class="item-img">
+                            <div class="item-name">绝对专注</div>
+                            <div class="item-desc">高生命值时获得额外攻击力</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/storm.png" alt="风暴聚集" class="item-img">
+                            <div class="item-name">风暴聚集</div>
+                            <div class="item-desc">随时间获得额外攻击力</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-order">
+                <h3 class="skill-title"><i class="fas fa-sort-amount-up"></i> 技能加点顺序</h3>
+                <div class="skill-sequence">
+                    <div class="skill-level">
+                        <div class="level-number">1级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">2级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">3级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">4级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">5级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">6级</div>
+                        <div class="skill-icon">R</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">7级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">8级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">9级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">10级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 英雄3: 铁血战士 -->
+        <section id="warrior" class="hero-content">
+            <div class="hero-header">
+                <img src="1.png" alt="铁血战士" class="hero-icon">
+                <div>
+                    <h2 class="hero-title">追忆之刃 · 亚连</h2>
+                    <div class="hero-role">定位：战士 | AOV对应英雄：亚连 | 锦云幻月1号主英雄</div>
+                </div>
+            </div>
+
+            <div class="build-section">
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-shopping-bag"></i> 核心出装</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/battle-axe.png" alt="黑色切割者" class="item-img">
+                            <div class="item-name">黑色切割者</div>
+                            <div class="item-desc">+400生命值，+40攻击力</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/armored-helmet.png" alt="钢铁烈阳之匣" class="item-img">
+                            <div class="item-name">钢铁烈阳之匣</div>
+                            <div class="item-desc">+300生命值，+30护甲</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/shield.png" alt="荆棘之甲" class="item-img">
+                            <div class="item-name">荆棘之甲</div>
+                            <div class="item-desc">+350生命值，+75护甲</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/steamdeck.png" alt="石像鬼石板甲" class="item-img">
+                            <div class="item-name">石像鬼石板甲</div>
+                            <div class="item-desc">+40护甲，+40魔抗</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/warm.png" alt="狂徒铠甲" class="item-img">
+                            <div class="item-name">狂徒铠甲</div>
+                            <div class="item-desc">+800生命值，+200%生命回复</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/ankle-boot.png" alt="铁板靴" class="item-img">
+                            <div class="item-name">铁板靴</div>
+                            <div class="item-desc">+20护甲，+45移动速度</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-flask"></i> 符文选择</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/fist.png" alt="不灭之握" class="item-img">
+                            <div class="item-name">不灭之握</div>
+                            <div class="item-desc">普攻命中时回复生命值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/shield.png" alt="护盾猛击" class="item-img">
+                            <div class="item-name">护盾猛击</div>
+                            <div class="item-desc">获得护盾时增加伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/regeneration.png" alt="复苏之风" class="item-img">
+                            <div class="item-name">复苏之风</div>
+                            <div class="item-desc">受到伤害时回复生命</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/growth.png" alt="过度生长" class="item-img">
+                            <div class="item-name">过度生长</div>
+                            <div class="item-desc">附近小兵死亡增加生命值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/speedometer.png" alt="传说：韧性" class="item-img">
+                            <div class="item-name">传说：韧性</div>
+                            <div class="item-desc">永久获得韧性</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/standing-man.png" alt="坚毅不倒" class="item-img">
+                            <div class="item-name">坚毅不倒</div>
+                            <div class="item-desc">低生命值时造成更多伤害</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-order">
+                <h3 class="skill-title"><i class="fas fa-sort-amount-up"></i> 技能加点顺序</h3>
+                <div class="skill-sequence">
+                    <div class="skill-level">
+                        <div class="level-number">1级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">2级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">3级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">4级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">5级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">6级</div>
+                        <div class="skill-icon">R</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">7级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">8级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">9级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">10级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 英雄4: 元素法师 -->
+        <section id="mage" class="hero-content">
+            <div class="hero-header">
+                <img src="2.png" alt="元素法师" class="hero-icon">
+                <div>
+                    <h2 class="hero-title">精灵之舞 · 艾琳</h2>
+                    <div class="hero-role">定位：射手 | AOV对应英雄：艾琳 | 锦云幻月2号主英雄</div>
+                </div>
+            </div>
+
+            <div class="build-section">
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-shopping-bag"></i> 核心出装</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/wizard-staff.png" alt="卢登的回声" class="item-img">
+                            <div class="item-name">卢登的回声</div>
+                            <div class="item-desc">+90法术强度，+600法力值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/sorcerer-hat.png" alt="法师之靴" class="item-img">
+                            <div class="item-name">法师之靴</div>
+                            <div class="item-desc">+18法术穿透，+45移动速度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/crystal-ball.png" alt="莫雷洛秘典" class="item-img">
+                            <div class="item-name">莫雷洛秘典</div>
+                            <div class="item-desc">+70法术强度，+300生命值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/magic-cauldron.png" alt="中娅沙漏" class="item-img">
+                            <div class="item-name">中娅沙漏</div>
+                            <div class="item-desc">+75法术强度，+45护甲</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/fireball.png" alt="灭世者的死亡之帽" class="item-img">
+                            <div class="item-name">死亡之帽</div>
+                            <div class="item-desc">+120法术强度，+35%法术强度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/void.png" alt="虚空之杖" class="item-img">
+                            <div class="item-name">虚空之杖</div>
+                            <div class="item-desc">+70法术强度，+40%法术穿透</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-flask"></i> 符文选择</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/comet.png" alt="奥术彗星" class="item-img">
+                            <div class="item-name">奥术彗星</div>
+                            <div class="item-desc">技能命中时召唤彗星</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/magic-wand.png" alt="法力流系带" class="item-img">
+                            <div class="item-name">法力流系带</div>
+                            <div class="item-desc">技能命中回复法力值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/reboot.png" alt="超然" class="item-img">
+                            <div class="item-name">超然</div>
+                            <div class="item-desc">+10%冷却缩减，溢出转为法术强度</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/scorch.png" alt="焦灼" class="item-img">
+                            <div class="item-name">焦灼</div>
+                            <div class="item-desc">技能命中造成额外魔法伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/clairvoyance.png" alt="神奇之鞋" class="item-img">
+                            <div class="item-name">神奇之鞋</div>
+                            <div class="item-desc">10分钟后获得免费鞋子</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/hourglass.png" alt="星界洞悉" class="item-img">
+                            <div class="item-name">星界洞悉</div>
+                            <div class="item-desc">+5%冷却缩减上限</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-order">
+                <h3 class="skill-title"><i class="fas fa-sort-amount-up"></i> 技能加点顺序</h3>
+                <div class="skill-sequence">
+                    <div class="skill-level">
+                        <div class="level-number">1级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">2级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">3级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">4级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">5级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">6级</div>
+                        <div class="skill-icon">R</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">7级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">8级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">9级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">10级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 英雄5: 神圣辅助 -->
+        <section id="support" class="hero-content">
+            <div class="hero-header">
+                <img src="3.png" alt="神圣辅助" class="hero-icon">
+                <div>
+                    <h2 class="hero-title">幻舞玲珑 · 公孙离</h2>
+                    <div class="hero-role">定位：射手 | AOV对应英雄：兰铎 | 锦云幻月3号主英雄</div>
+                </div>
+            </div>
+
+            <div class="build-section">
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-shopping-bag"></i> 核心出装</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/holy-grail.png" alt="炽热香炉" class="item-img">
+                            <div class="item-name">炽热香炉</div>
+                            <div class="item-desc">+60法术强度，+10%冷却缩减</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/wingfoot.png" alt="疾行之靴" class="item-img">
+                            <div class="item-name">疾行之靴</div>
+                            <div class="item-desc">+25移动速度，脱离战斗+115</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/angel-wings.png" alt="救赎" class="item-img">
+                            <div class="item-name">救赎</div>
+                            <div class="item-desc">+200生命值，+50%基础生命回复</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/shield.png" alt="钢铁烈阳之匣" class="item-img">
+                            <div class="item-name">钢铁烈阳之匣</div>
+                            <div class="item-desc">+30护甲，+30魔抗，主动护盾</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/staff-of-moses.png" alt="米凯尔的祝福" class="item-img">
+                            <div class="item-name">米凯尔的祝福</div>
+                            <div class="item-desc">+40魔抗，+10%冷却缩减</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/ring.png" alt="骑士之誓" class="item-img">
+                            <div class="item-name">骑士之誓</div>
+                            <div class="item-desc">+400生命值，+10%冷却缩减</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="build-column">
+                    <h3 class="build-title"><i class="fas fa-flask"></i> 符文选择</h3>
+                    <div class="items-container">
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/guardian-angel.png" alt="守护者" class="item-img">
+                            <div class="item-name">守护者</div>
+                            <div class="item-desc">为附近友军提供护盾</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/shield.png" alt="护盾猛击" class="item-img">
+                            <div class="item-name">护盾猛击</div>
+                            <div class="item-desc">获得护盾时增加伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/bone.png" alt="骸骨镀层" class="item-img">
+                            <div class="item-name">骸骨镀层</div>
+                            <div class="item-desc">受到伤害时减少后续伤害</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/rebirth.png" alt="复苏" class="item-img">
+                            <div class="item-name">复苏</div>
+                            <div class="item-desc">治疗效果和护盾效果提升</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/brain.png" alt="法力流系带" class="item-img">
+                            <div class="item-name">法力流系带</div>
+                            <div class="item-desc">技能命中回复法力值</div>
+                        </div>
+                        <div class="item">
+                            <img src="https://img.icons8.com/color/96/000000/super-mushroom.png" alt="超然" class="item-img">
+                            <div class="item-name">超然</div>
+                            <div class="item-desc">+10%冷却缩减</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="skill-order">
+                <h3 class="skill-title"><i class="fas fa-sort-amount-up"></i> 技能加点顺序</h3>
+                <div class="skill-sequence">
+                    <div class="skill-level">
+                        <div class="level-number">1级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">2级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">3级</div>
+                        <div class="skill-icon">W</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">4级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">5级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">6级</div>
+                        <div class="skill-icon">R</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">7级</div>
+                        <div class="skill-icon">Q</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">8级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">9级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                    <div class="skill-level">
+                        <div class="level-number">10级</div>
+                        <div class="skill-icon">E</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>锦云幻月个人游戏网站 | 本网站内容为游戏攻略分享，仅用于学习展示</p>
+            <p>最后更新: 2025年12月26日</p>
+        </footer>
+    </div>
+
+    <script>
+        // 获取所有导航按钮
+        const navButtons = document.querySelectorAll('.nav-btn');
+        // 获取所有英雄内容区域
+        const heroContents = document.querySelectorAll('.hero-content');
+
+        // 为每个按钮添加点击事件
+        navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+        // 获取按钮对应的英雄ID
+        const heroId = this.getAttribute('data-hero');
+
+        // 移除所有按钮的active类
+        navButtons.forEach(btn => {
+        btn.classList.remove('active');
+        });
+
+        // 为当前点击的按钮添加active类
+        this.classList.add('active');
+
+        // 隐藏所有英雄内容
+        heroContents.forEach(content => {
+        content.classList.remove('active');
+        });
+
+        // 显示对应的英雄内容
+        document.getElementById(heroId).classList.add('active');
+        });
+        });
+
+        // 页面加载时，确保第二个英雄（精灵射手）是选中的
+        window.addEventListener('DOMContentLoaded', function() {
+        // 检查是否已经有默认选中的英雄
+        const activeHero = document.querySelector('.hero-content.active');
+        const activeButton = document.querySelector('.nav-btn.active');
+
+        // 如果没有默认选中的，则选中第二个英雄
+        if (!activeHero || !activeButton) {
+        // 移除所有激活状态
+        heroContents.forEach(content => content.classList.remove('active'));
+        navButtons.forEach(btn => btn.classList.remove('active'));
+
+        // 设置第二个英雄为激活状态
+        heroContents[1].classList.add('active');
+        navButtons[1].classList.add('active');
+        }
+        });
+    </script>
+</body>
+</html>
