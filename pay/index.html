@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>游戏消费计算器</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Helvetica Neue', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        
+        body {
+            background-color: #000;
+            color: #fff;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* 顶部模式切换区域 - 20% */
+        .header {
+            height: 20vh;
+            background-color: #000;
+            display: flex;
+            flex-direction: column;
+            padding: 10px 15px 0;
+        }
+        
+        .title-container {
+            margin-bottom: 10px;
+        }
+        
+        .title {
+            font-size: 1.2rem;
+            color: #fff;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        /* 模式切换按钮 */
+        .mode-switch {
+            display: flex;
+            background: rgba(40, 40, 40, 0.9);
+            border-radius: 20px;
+            padding: 4px;
+            margin: 0 auto;
+            width: 90%;
+            max-width: 400px;
+        }
+        
+        .mode-btn {
+            flex: 1;
+            padding: 12px 5px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: default;
+            border-radius: 16px;
+            transition: all 0.2s;
+            color: #aaa;
+        }
+        
+        .mode-btn.active {
+            background: #1c1c1e;
+            color: #fff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        }
+        
+        .mode-info {
+            margin-top: 12px;
+            text-align: center;
+            color: #666;
+            font-size: 0.85rem;
+            padding: 0 10px;
+            line-height: 1.3;
+        }
+        
+        /* 显示区域 - 20% */
+        .display {
+            height: 20vh;
+            background-color: #000;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: flex-end;
+        }
+        
+        .input-display {
+            font-size: 2.8rem;
+            color: #fff;
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+            text-align: right;
+            min-height: 45px;
+        }
+        
+        .result-display {
+            font-size: 1.5rem;
+            color: #aaa;
+            font-weight: 300;
+            line-height: 1;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            width: 100%;
+            text-align: right;
+            min-height: 25px;
+        }
+        
+        /* 输入盘区域 - 60% - 诺基亚布局 */
+        .keypad {
+            height: 60vh;
+            background-color: #000;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+        
+        /* 诺基亚键盘布局 - 3x3数字键 + 底部功能键 */
+        .nokia-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: repeat(4, 1fr);
+            gap: 12px;
+            flex: 1;
+            margin-bottom: 12px;
+        }
+        
+        .nokia-key {
+            background-color: #333;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 500;
+            cursor: default;
+            transition: all 0.1s;
+            color: #fff;
+            border: none;
+            outline: none;
+        }
+        
+        .nokia-key:active {
+            background-color: #555;
+            transform: scale(0.95);
+        }
+        
+        .nokia-key.clear {
+            background-color: #ff3b30;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .nokia-key.clear:active {
+            background-color: #ff6b5c;
+        }
+        
+        .nokia-key.zero {
+            font-size: 1.8rem;
+            font-weight: 500;
+        }
+        
+        .nokia-key.backspace {
+            background-color: #007aff;
+            color: #fff;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .nokia-key.backspace:active {
+            background-color: #5ac8fa;
+        }
+        
+        /* 方向切换按钮 */
+        .direction-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .direction-btn {
+            width: 100%;
+            max-width: 300px;
+            background-color: #1c1c1e;
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 14px;
+            cursor: default;
+            transition: all 0.2s;
+        }
+        
+        .direction-btn:active {
+            background-color: #333;
+            transform: scale(0.98);
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 360px) {
+            .input-display {
+                font-size: 2.4rem;
+            }
+            
+            .result-display {
+                font-size: 1.3rem;
+            }
+            
+            .nokia-key {
+                font-size: 1.6rem;
+            }
+            
+            .nokia-grid {
+                gap: 10px;
+            }
+        }
+        
+        @media (min-width: 768px) {
+            body {
+                max-width: 400px;
+                margin: 0 auto;
+                border-left: 1px solid #333;
+                border-right: 1px solid #333;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部模式切换区域 -->
+    <div class="header">
+        <div class="title-container">
+            <div class="title">游戏消费计算器</div>
+        </div>
+        
+        <div class="mode-switch">
+            <div class="mode-btn active" id="mode-independent">独立收入</div>
+            <div class="mode-btn" id="mode-non-independent">非独立收入</div>
+        </div>
+        
+        <div class="mode-info" id="mode-info">
+            
+        </div>
+    </div>
+    
+    <!-- 显示区域 -->
+    <div class="display">
+        <div class="result-display" id="result-display">游戏最高消费: 0元</div>
+        <div class="input-display" id="input-display">0</div>
+    </div>
+    
+    <!-- 输入盘区域 - 诺基亚布局 -->
+    <div class="keypad">
+        <!-- 诺基亚3x3键盘布局 -->
+        <div class="nokia-grid">
+            <!-- 第一行: 1 2 3 -->
+            <button class="nokia-key" data-number="1">1</button>
+            <button class="nokia-key" data-number="2">2</button>
+            <button class="nokia-key" data-number="3">3</button>
+            
+            <!-- 第二行: 4 5 6 -->
+            <button class="nokia-key" data-number="4">4</button>
+            <button class="nokia-key" data-number="5">5</button>
+            <button class="nokia-key" data-number="6">6</button>
+            
+            <!-- 第三行: 7 8 9 -->
+            <button class="nokia-key" data-number="7">7</button>
+            <button class="nokia-key" data-number="8">8</button>
+            <button class="nokia-key" data-number="9">9</button>
+            
+            <!-- 第四行: 清除 0 退格 -->
+            <button class="nokia-key clear" data-action="clear">清除</button>
+            <button class="nokia-key zero" data-number="0">0</button>
+            <button class="nokia-key backspace" data-action="backspace">退格</button>
+        </div>
+        
+        <!-- 方向切换按钮 -->
+        <div class="direction-container">
+            <button class="direction-btn" id="toggle-direction">收入→消费</button>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentMode = 'independent'; // 'independent' 或 'non-independent'
+        let currentDirection = 'forward'; // 'forward' 或 'reverse'
+        let currentInput = '0';
+        let lastResult = 0;
+        
+        // DOM元素
+        const modeIndependentBtn = document.getElementById('mode-independent');
+        const modeNonIndependentBtn = document.getElementById('mode-non-independent');
+        const modeInfo = document.getElementById('mode-info');
+        const inputDisplay = document.getElementById('input-display');
+        const resultDisplay = document.getElementById('result-display');
+        const toggleDirectionBtn = document.getElementById('toggle-direction');
+        
+        // 只舍不入的取整函数
+        function floorNumber(num) {
+            return Math.floor(num);
+        }
+        
+        // 计算函数
+        function calculate() {
+            const amount = parseFloat(currentInput) || 0;
+            let result = 0;
+            let displayText = '';
+            
+            if (currentDirection === 'forward') {
+                // 正向计算：收入总额 → 游戏最高消费
+                if (currentMode === 'independent') {
+                    // 独立收入模式
+                    if (amount <= 175) {
+                        result = amount;
+                        displayText = `游戏最高消费: ${result}元`;
+                    } else {
+                        result = 175 + (amount * 0.45);
+                        displayText = `游戏最高消费: ${floorNumber(result)}元`;
+                    }
+                } else {
+                    // 非独立收入模式
+                    if (amount <= 16) {
+                        result = amount;
+                        displayText = `游戏最高消费: ${result}元`;
+                    } else {
+                        result = 16 + (amount * 0.29);
+                        displayText = `游戏最高消费: ${floorNumber(result)}元`;
+                    }
+                }
+                
+                // 确保游戏消费不超过收入总额
+                if (result > amount) {
+                    result = amount;
+                    displayText = `游戏最高消费: ${floorNumber(result)}元`;
+                } else {
+                    result = floorNumber(result);
+                }
+                
+                lastResult = result;
+            } else {
+                // 反向计算：游戏消费 → 收入最低所需
+                if (currentMode === 'independent') {
+                    // 独立收入模式
+                    if (amount <= 175) {
+                        result = amount;
+                        displayText = `收入最低所需: ${result}元`;
+                    } else {
+                        result = (amount - 175) / 0.45;
+                        displayText = `收入最低所需: ${floorNumber(result)}元`;
+                    }
+                } else {
+                    // 非独立收入模式
+                    if (amount <= 16) {
+                        result = amount;
+                        displayText = `收入最低所需: ${result}元`;
+                    } else {
+                        result = (amount - 16) / 0.29;
+                        displayText = `收入最低所需: ${floorNumber(result)}元`;
+                    }
+                }
+                
+                result = floorNumber(result);
+                lastResult = result;
+            }
+            
+            // 更新显示
+            resultDisplay.textContent = displayText;
+        }
+        
+        // 切换模式
+        function switchMode(mode) {
+            currentMode = mode;
+            
+            // 更新按钮样式
+            if (mode === 'independent') {
+                modeIndependentBtn.classList.add('active');
+                modeNonIndependentBtn.classList.remove('active');
+                modeInfo.textContent = ' ';
+            } else {
+                modeIndependentBtn.classList.remove('active');
+                modeNonIndependentBtn.classList.add('active');
+                modeInfo.textContent = ' ';
+            }
+            
+            // 更新结果显示
+            if (currentDirection === 'forward') {
+                resultDisplay.textContent = '游戏最高消费: 0元';
+            } else {
+                resultDisplay.textContent = '收入最低所需: 0元';
+            }
+            
+            // 重新计算
+            calculate();
+        }
+        
+        // 切换计算方向
+        function toggleDirection() {
+            currentDirection = currentDirection === 'forward' ? 'reverse' : 'forward';
+            
+            if (currentDirection === 'forward') {
+                toggleDirectionBtn.textContent = '收入→消费';
+                resultDisplay.textContent = '游戏最高消费: 0元';
+            } else {
+                toggleDirectionBtn.textContent = '消费→收入';
+                resultDisplay.textContent = '收入最低所需: 0元';
+            }
+            
+            calculate();
+        }
+        
+        // 处理输入
+        function handleInput(value) {
+            // 如果当前是0，直接替换
+            if (currentInput === '0') {
+                currentInput = value;
+            } else {
+                // 否则追加
+                currentInput += value;
+            }
+            
+            // 限制长度
+            if (currentInput.length > 12) {
+                currentInput = currentInput.substring(0, 12);
+            }
+            
+            inputDisplay.textContent = formatNumber(currentInput);
+            calculate();
+        }
+        
+        // 清除输入
+        function clearInput() {
+            currentInput = '0';
+            inputDisplay.textContent = '0';
+            resultDisplay.textContent = currentDirection === 'forward' ? '游戏最高消费: 0元' : '收入最低所需: 0元';
+        }
+        
+        // 退格
+        function backspace() {
+            if (currentInput.length > 1) {
+                currentInput = currentInput.substring(0, currentInput.length - 1);
+            } else {
+                currentInput = '0';
+            }
+            
+            inputDisplay.textContent = formatNumber(currentInput);
+            calculate();
+        }
+        
+        // 格式化数字显示（添加千位分隔符）
+        function formatNumber(numStr) {
+            // 移除前导零
+            if (numStr.length > 1 && numStr[0] === '0' && numStr[1] !== '.') {
+                numStr = numStr.substring(1);
+            }
+            
+            // 添加千位分隔符
+            const num = parseFloat(numStr);
+            if (isNaN(num)) return '0';
+            
+            return num.toLocaleString('zh-CN', {
+                maximumFractionDigits: 0,
+                useGrouping: true
+            });
+        }
+        
+        // 初始化事件监听
+        function init() {
+            // 模式切换
+            modeIndependentBtn.addEventListener('click', () => switchMode('independent'));
+            modeNonIndependentBtn.addEventListener('click', () => switchMode('non-independent'));
+            
+            // 方向切换
+            toggleDirectionBtn.addEventListener('click', toggleDirection);
+            
+            // 数字按钮
+            document.querySelectorAll('[data-number]').forEach(button => {
+                button.addEventListener('click', () => {
+                    handleInput(button.getAttribute('data-number'));
+                });
+            });
+            
+            // 清除按钮
+            document.querySelector('[data-action="clear"]').addEventListener('click', clearInput);
+            
+            // 退格按钮
+            document.querySelector('[data-action="backspace"]').addEventListener('click', backspace);
+            
+            // 触摸优化
+            document.querySelectorAll('.nokia-key, .direction-btn, .mode-btn').forEach(button => {
+                button.addEventListener('touchstart', (e) => {
+                    e.preventDefault();
+                    button.click();
+                });
+            });
+            
+            // 初始化显示
+            inputDisplay.textContent = '0';
+            resultDisplay.textContent = '游戏最高消费: 0元';
+        }
+        
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', init);
+        
+        // 禁用键盘输入
+        document.addEventListener('keydown', (e) => {
+            e.preventDefault();
+            
+            // 允许数字输入
+            if (e.key >= '0' && e.key <= '9') {
+                handleInput(e.key);
+            }
+            // 退格键
+            else if (e.key === 'Backspace') {
+                backspace();
+            }
+            // ESC或C清除
+            else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+                clearInput();
+            }
+        });
+    </script>
+</body>
+</html>
