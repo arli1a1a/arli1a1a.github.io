@@ -1,0 +1,45 @@
+package demo04;
+
+import java.util.Scanner;
+
+public class demo4 {
+
+	public static void main(String[] args) {
+		String huaWeiBrand="华为手机";
+		double huaWeiSize=5.5;
+		double huaWeiPrice=3688.88;
+		String huaWeiConfig="8+128g 全面刘海屏";
+		System.out.println("品牌："+huaWeiBrand);
+		System.out.println("尺寸："+huaWeiSize);
+		System.out.println("价格："+huaWeiPrice);
+		System.out.println("配置："+huaWeiConfig);
+		Scanner sc= new Scanner(System.in);
+		System.out.println("请输入"+huaWeiBrand+"的库存：");
+		int huaWeiCount=sc.nextInt();
+		double huaWeiMoney=huaWeiCount*huaWeiPrice;
+		System.out.println("库存"+huaWeiBrand+"的金额:"+huaWeiMoney);
+
+		String xmBrand = "小米手机";
+		double xmSize = 5.0;
+		double xmPrice = 2988.88;;
+		String xmConfig = "4+64g 全面屏";
+		System.out.println("品牌："+xmBrand);
+		System.out.println("尺寸："+xmSize);
+		System.out.println("价格："+xmPrice);
+		System.out.println("配置："+xmConfig);
+		System.out.println("请输入"+xmBrand+"的库存：");
+		int xmCount = sc.nextInt();
+		double xmMoney = xmCount * xmPrice;
+		System.out.println("库存" + xmBrand + "的金额："+xmMoney);
+		System.out.println("----------------库存清单----------------");
+		System.out.println("品牌型号\t尺寸\t价格\t配置\t\t库存\t金额");
+		System.out.println(huaWeiBrand + "\t" + huaWeiSize+"\t"+huaWeiPrice+"\t"+huaWeiConfig+"\t"+huaWeiCount+"\t"+huaWeiMoney);
+		System.out.println(xmBrand+"\t"+xmSize+"\t"+xmPrice+"\t"+xmConfig+"\t"+xmCount+"\t"+xmMoney);
+		System.out.println("------------------");
+		System.out.println("总库存："+(huaWeiCount + xmCount));
+		System.out.println("总金额："+(huaWeiMoney + xmMoney));
+		
+	}
+	
+
+}
