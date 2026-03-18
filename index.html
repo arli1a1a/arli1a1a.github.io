@@ -1,11 +1,242 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" >
+<!DOCTYPE html>
+<html lang="en">
 <head>
- 
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>时分·随机祝福</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(145deg, #0b1a2e 0%, #1b2f44 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+
+        .center-card {
+            background: rgba(10, 25, 40, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 4rem 2rem 4rem 2rem;
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(210, 230, 255, 0.1) inset;
+            padding: 3rem 3.5rem 2.8rem 3.5rem;
+            max-width: 700px;
+            width: fit-content;
+            transition: all 0.2s ease;
+        }
+
+        /* 两排数字：时 & 分 */
+        .time-rows {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .hour-row, .minute-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            line-height: 1;
+        }
+
+        /* 大号数字风格 */
+        .digit-block {
+            background: #0f212f;
+            background-image: radial-gradient(circle at 30% 20%, #2d4b62, #0a1a26 80%);
+            box-shadow: 0 12px 0 #051016, 0 20px 30px rgba(0,0,0,0.5), inset 0 -3px 8px rgba(0,255,255,0.2);
+            border-radius: 40px;
+            padding: 0.2em 0.25em;
+            min-width: 1.6em;
+            text-align: center;
+            font-weight: 800;
+            color: #ebf5ff;
+            text-shadow: 0 0 8px #6df, 0 0 18px #3bf, 0 4px 0 #0a4c6e;
+            font-size: 12rem;    /* 基础尺寸，通过vw适配保证大屏/小屏 */
+            font-size: clamp(6rem, 22vw, 13rem);
+            letter-spacing: 4px;
+            border: 1px solid rgba(170, 230, 255, 0.3);
+            border-bottom-width: 4px;
+            border-right-width: 3px;
+            transform: rotate(0.5deg);
+            display: inline-block;
+            transition: 0.1s ease;
+        }
+
+        /* 微调相邻数字间距，看起来更紧密 */
+        .hour-row .digit-block:not(:last-child),
+        .minute-row .digit-block:not(:last-child) {
+            margin-right: 0.1em;
+        }
+
+        /* 中间可能出现的冒号装饰 (但为了纯粹两排数字，不加额外符号，只用自然间距) */
+
+        /* 祝福语区域 */
+        .blessing-box {
+            margin-top: 2.2rem;
+            text-align: center;
+            padding: 1rem 1.8rem;
+            background: rgba(3, 15, 27, 0.7);
+            border-radius: 80px;
+            border: 1px solid rgba(130, 200, 255, 0.25);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(4px);
+            min-height: 6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blessing-text {
+            font-size: 2.2rem;
+            font-size: clamp(1.8rem, 7vw, 3rem);
+            font-weight: 400;
+            color: #e1f0fa;
+            text-shadow: 0 2px 5px #0066aa, 0 0 30px #9cdbff;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #d6ecff, #b1d9ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: opacity 0.5s ease;
+            line-height: 1.4;
+        }
+
+        /* 细小的脚标——显示随机种子/刷新提醒（不显眼）*/
+        .meta-note {
+            margin-top: 1rem;
+            font-size: 0.75rem;
+            color: #608094;
+            text-align: center;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+
+        /* 针对小屏调整数字圆角 */
+        @media (max-width: 500px) {
+            .digit-block {
+                border-radius: 30px;
+                text-shadow: 0 0 6px #6df, 0 0 12px #3bf, 0 3px 0 #0a4c6e;
+            }
+            .center-card {
+                padding: 2rem 1.5rem 1.8rem 1.5rem;
+                border-radius: 3rem 1.5rem 3rem 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<script language="javascript" type="text/javascript">
-    window.location.href = "https://www.bilibili.com/video/BV154igBGECZ/";
-</script>
+    <div class="center-card">
+        <!-- 两排数字：第一排时，第二排分 -->
+        <div class="time-rows">
+            <div class="hour-row" id="hourRow">
+                <!-- 动态填充两个数字 (十位, 个位) 由JS生成 -->
+                <span class="digit-block" id="hourTens">0</span>
+                <span class="digit-block" id="hourUnits">0</span>
+            </div>
+            <div class="minute-row" id="minuteRow">
+                <span class="digit-block" id="minuteTens">0</span>
+                <span class="digit-block" id="minuteUnits">0</span>
+            </div>
+        </div>
+
+        <!-- 下方随机祝福语容器 -->
+        <div class="blessing-box">
+            <div class="blessing-text" id="blessingMessage">愿你此刻安然</div>
+        </div>
+        <div class="meta-note">✦ 心之所愿 随即而来 ✦</div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- 祝福语词库 (正好四种) ----------
+            const blessings = [
+                "✨ 日有熹微，星河长明 ✨",
+                "🌿 无事绊心，所愿皆成 🌿",
+                "☕ 且听风吟，静待花开 ☕",
+                "🌟 晨昏无恙，岁月温柔 🌟"
+            ];
+
+            // ---------- 获取DOM元素 ----------
+            const hourTens = document.getElementById('hourTens');
+            const hourUnits = document.getElementById('hourUnits');
+            const minuteTens = document.getElementById('minuteTens');
+            const minuteUnits = document.getElementById('minuteUnits');
+            const blessingEl = document.getElementById('blessingMessage');
+
+            // ---------- 工具函数：补零 + 分割十位个位 ----------
+            function updateTimeDigits() {
+                const now = new Date();
+                const hours = now.getHours();        // 0–23
+                const minutes = now.getMinutes();     // 0–59
+
+                // 处理小时 (总是两位，例如 03, 12)
+                const hourStr = hours.toString().padStart(2, '0');
+                hourTens.textContent = hourStr[0];
+                hourUnits.textContent = hourStr[1];
+
+                // 处理分钟 (总是两位)
+                const minuteStr = minutes.toString().padStart(2, '0');
+                minuteTens.textContent = minuteStr[0];
+                minuteUnits.textContent = minuteStr[1];
+            }
+
+            // ---------- 随机选择一条祝福语 ----------
+            function setRandomBlessing() {
+                const randomIndex = Math.floor(Math.random() * blessings.length);
+                blessingEl.textContent = blessings[randomIndex];
+            }
+
+            // ---------- 初始化显示：立即执行一次，保证打开就有时间+随机祝福 ----------
+            updateTimeDigits();
+            setRandomBlessing();
+
+            // ---------- 设置定时器：每秒更新时间，同时每分钟变化时可连带随机祝福（但按需求“赋予四种祝福语随机出现一个”）
+            // 为了更自然，我们让祝福语每分钟都可能变化一次（正好分变化）。但也可以每次更新时间都变化
+            // 不过题意是在下面赋予四种祝福语随机出现一个，可以周期性变化，也可以只随机一次。为了有趣，我们让祝福语每分钟更换一次（但依然随机），如果希望刷新频率低可调整。
+            // 这里我选择：每分钟的第0秒更新一下祝福语（与分钟变化同步），但同时也保留如果用户停留很久，祝福语有变化感。
+            // 但也会每秒检查分钟是否有变化——利用updateTimeDigits每秒运行，同时检测分钟变化再换祝福语。
+            let lastMinute = -1;  // 初始无效值
+
+            function tick() {
+                const now = new Date();
+                const currentMinute = now.getMinutes();
+
+                // 更新时间数字（总是执行）
+                updateTimeDigits();
+
+                // 如果分钟发生变化 (或者lastMinute为-1初始) 就换一条随机祝福
+                if (lastMinute !== currentMinute) {
+                    setRandomBlessing();
+                    lastMinute = currentMinute;
+                }
+            }
+
+            // 第一次强制同步 lastMinute，避免一开始就因-1而重复刷新（但setRandomBlessing已经执行过，这里再同步一下逻辑）
+            // 但setRandomBlessing在初始化时已执行过一次，导致lastMinute尚未记录，所以手动记录当前分钟。
+            const initialNow = new Date();
+            lastMinute = initialNow.getMinutes();
+
+            // 启动每秒定时器 (精确依靠系统秒)
+            setInterval(tick, 1000);
+
+            // 可选的立即执行一次tick以保证边界 (但updateTimeDigits已在前面执行，tick会再次执行，但没关系)
+            // 但为了避免重复覆盖祝福语（其实无伤大雅），我们就不调用tick了，直接用定时器。
+            // 为了保证第一个 minute 变更也能触发（例如打开页面时正好是59秒，下一秒变分钟），定时器会处理。
+            // 但万一用户打开页面时，定时器一秒后才触发，但页面已经显示了时间和一条随机祝福，符合要求。
+            // 完美。
+        })();
+    </script>
+    <!-- 设计说明：两排数字分别代表时(上)和分(下)；祝福语随机从四种中抽取，每分钟自动更新一次（若想刷新可重新加载，但自动变化更有趣）。数字风格厚重发光，契合深夜/白昼氛围。 -->
 </body>
 </html>
